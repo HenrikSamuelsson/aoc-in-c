@@ -6,13 +6,13 @@
 
 This project **does not include input files** from [Advent of Code](https://adventofcode.com), since they are unique for each user.
 
-To run a puzzle solution, create the input file manually:
+To run a puzzle solution, first create an input folder at the root level:
 
 ```bash
 mkdir -p input
 ```
 
-Then save your personal input as:
+Then in this folder save your personal input as:
 
 ```text
 input/YYYY-dayDD.txt
