@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define INPUT_BUFFER_SIZE 8192
+
 int compute_final_floor(const char *instructions) {
     int floor = 0;
     for (const char *p = instructions; *p != '\0'; ++p) {
@@ -55,8 +57,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char buffer[8192]; // assuming the input fits in 8 KB
-    size_t len = fread(buffer, 1, sizeof(buffer) - 1, fp);
+    char buffer[INPUT_BUFFER_SIZE];
+    size_t len = fread(buffer, 1, INPUT_BUFFER_SIZE - 1, fp);
     buffer[len] = '\0';
     fclose(fp);
 
