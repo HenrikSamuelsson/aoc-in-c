@@ -16,6 +16,15 @@ int compute_final_floor(const char *instructions) {
     return floor;
 }
 
+bool read_input(FILE *fp, char *buffer, size_t buffer_size) {
+    size_t len = fread(buffer, 1, buffer_size - 1, fp);
+    if (ferror(fp)) {
+        return false;
+    }
+    buffer[len] = '\0';
+    return true;
+}
+
 bool run_tests(void) {
     struct {
         const char *input;
@@ -58,8 +67,12 @@ int main(int argc, char *argv[]) {
     }
 
     char buffer[INPUT_BUFFER_SIZE];
-    size_t len = fread(buffer, 1, INPUT_BUFFER_SIZE - 1, fp);
-    buffer[len] = '\0';
+    if (!read_input(fp, buffer, INPUT_BUFFER_SIZE)) {
+        fprintf(stderr, "Failed to read input.\n");
+        fclose(fp);
+        return 1;
+    }
+
     fclose(fp);
 
     int floor = compute_final_floor(buffer);
