@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
-#define INPUT_BUFFER_SIZE 8192
+#include <stdlib.h>
 
 int compute_final_floor(const char *instructions) {
     int floor = 0;
@@ -16,14 +15,48 @@ int compute_final_floor(const char *instructions) {
     return floor;
 }
 
-bool read_input(FILE *fp, char *buffer, size_t buffer_size) {
-    size_t len = fread(buffer, 1, buffer_size - 1, fp);
-    if (ferror(fp)) {
-        return false;
+char *read_input_alloc(const char *filepath) {
+    FILE *fp = fopen(filepath, "r");
+    if (!fp) {
+        perror("fopen");
+        return NULL;
     }
-    buffer[len] = '\0';
-    return true;
+
+    if (fseek(fp, 0, SEEK_END) != 0) {
+        perror("fseek");
+        fclose(fp);
+        return NULL;
+    }
+
+    long filesize = ftell(fp);
+    if (filesize < 0) {
+        perror("ftell");
+        fclose(fp);
+        return NULL;
+    }
+
+    rewind(fp);
+
+    char *buffer = malloc(filesize + 1);
+    if (!buffer) {
+        perror("malloc");
+        fclose(fp);
+        return NULL;
+    }
+
+    size_t read = fread(buffer, 1, filesize, fp);
+    if (ferror(fp)) {
+        perror("fread");
+        free(buffer);
+        fclose(fp);
+        return NULL;
+    }
+
+    buffer[read] = '\0';
+    fclose(fp);
+    return buffer;
 }
+
 
 bool run_tests(void) {
     struct {
@@ -60,22 +93,15 @@ int main(int argc, char *argv[]) {
         return run_tests() ? 0 : 1;
     }
 
-    FILE *fp = fopen("input/2015-day01.txt", "r");
-    if (!fp) {
-        perror("Failed to open input file");
+    const char *path = "input/2015-day01.txt";
+    char *buffer = read_input_alloc(path);
+    if (!buffer) {
         return 1;
     }
-
-    char buffer[INPUT_BUFFER_SIZE];
-    if (!read_input(fp, buffer, INPUT_BUFFER_SIZE)) {
-        fprintf(stderr, "Failed to read input.\n");
-        fclose(fp);
-        return 1;
-    }
-
-    fclose(fp);
 
     int floor = compute_final_floor(buffer);
     printf("Final floor: %d\n", floor);
+
+    free(buffer);
     return 0;
 }
