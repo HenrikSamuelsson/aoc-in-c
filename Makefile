@@ -3,11 +3,11 @@ CFLAGS=-Wall -Wextra -O2
 BIN=bin
 
 all:
-	@echo "Usage: make day=DD year=YYYY"
-	@echo "Example: make day=01 year=2015"
+	@echo "Usage: make run day=DD year=YYYY"
+	@echo "Example: make run day=01 year=2015"
 
 run:
-	$(CC) $(CFLAGS) src/$(year)/day$(day).c -o $(BIN)/day$(day)
+	$(CC) $(CFLAGS) -Isrc src/$(year)/day$(day).c src/input.c -o $(BIN)/day$(day)
 	./$(BIN)/day$(day)
 
 .PHONY: all run
