@@ -3,10 +3,13 @@
   "language": "en",
   "words": [
     "Allman",
+    "bugprone",
+    "cppcoreguidelines",
     "dkms",
     "dylib",
     "Mkfile",
     "symvers",
+    "vararg",
     "Wextra"
   ],
   "ignorePaths": [
