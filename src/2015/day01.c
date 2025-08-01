@@ -8,13 +8,14 @@
 int compute_final_floor(const char *instructions)
 {
     int floor = 0;
-    for (const char *p = instructions; *p != '\0'; ++p)
+    for (const char *instruction = instructions; *instruction != '\0';
+         ++instruction)
     {
-        if (*p == '(')
+        if (*instruction == '(')
         {
             floor++;
         }
-        else if (*p == ')')
+        else if (*instruction == ')')
         {
             floor--;
         }
