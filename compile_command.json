@@ -1,0 +1,7 @@
+[
+    {
+        "directory": "C:/dev/aoc-in-c",
+        "command": "gcc -Iinclude -std=c11 -c src/2015/day01.c",
+        "file": "src/2015/day01.c"
+    }
+]

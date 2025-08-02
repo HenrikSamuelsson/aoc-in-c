@@ -22,17 +22,19 @@ int compute_final_floor(const char *instructions)
     return floor;
 }
 
+struct test_case
+{
+    const char *input;
+    int expected;
+};
+
+const struct test_case tests[] = {
+    {"(())", 0}, {"()()", 0}, {"(((", 3},  {"(()(()(", 3},  {"))(((((", 3},
+    {"())", -1}, {"))(", -1}, {")))", -3}, {")())())", -3},
+};
+
 bool run_tests(void)
 {
-    struct
-    {
-        const char *input;
-        int expected;
-    } tests[] = {
-        {"(())", 0}, {"()()", 0}, {"(((", 3},  {"(()(()(", 3},  {"))(((((", 3},
-        {"())", -1}, {"))(", -1}, {")))", -3}, {")())())", -3},
-    };
-
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; ++i)
     {

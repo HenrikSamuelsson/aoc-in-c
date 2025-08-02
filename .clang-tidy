@@ -2,18 +2,20 @@ Checks: >
   -*,
   bugprone-*,
   clang-analyzer-*,
+  cert-*,
   cppcoreguidelines-*,
   misc-*,
+  modernize-*,
   performance-*,
   portability-*,
   readability-*,
-  modernize-*,
-  cert-*,
-  -cppcoreguidelines-pro-type-vararg,
-  -cppcoreguidelines-owning-memory
+  # Disable checks that are too noisy or not relevant
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-type-vararg
 
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 FormatStyle: file
 CheckOptions:
-  - { key: readability-magic-numbers.IgnoredValues, value: '0,1,2,255' }
+  - key: readability-magic-numbers.IgnoredValues
+    value: '0,1,2,255'

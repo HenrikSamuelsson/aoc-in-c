@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: [
+    "-std=c11",
+    "-I", "C:/tools/mingw64/x86_64-w64-mingw32/include",
+    "-I", "C:/tools/mingw64/lib/gcc/x86_64-w64-mingw32/15.1.0/include",
+    "-I", "C:/dev/aoc-in-c/include"
+  ]
