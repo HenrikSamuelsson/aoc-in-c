@@ -5,7 +5,7 @@
 
 #include "input.h"
 
-int compute_final_floor(const char *instructions)
+int solve_aoc_2015_day_01_part_1(const char *instructions)
 {
     int floor = 0;
     for (const char *instr = instructions; *instr != '\0'; ++instr)
@@ -38,7 +38,7 @@ bool run_tests(void)
     int num_tests = sizeof(tests) / sizeof(tests[0]);
     for (int i = 0; i < num_tests; ++i)
     {
-        int result = compute_final_floor(tests[i].input);
+        int result = solve_aoc_2015_day_01_part_1(tests[i].input);
         if (result != tests[i].expected)
         {
             printf("Test %d failed: input \"%s\" → expected %d, got %d\n",
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    int floor = compute_final_floor(buffer);
+    int floor = solve_aoc_2015_day_01_part_1(buffer);
     printf("Final floor: %d\n", floor);
 
     free(buffer);
