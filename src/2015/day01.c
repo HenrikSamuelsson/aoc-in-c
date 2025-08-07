@@ -109,8 +109,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    int floor = solve_aoc_2015_day_01_part_1(buffer);
-    printf("Final floor: %d\n", floor);
+    int answer_p1 = solve_aoc_2015_day_01_part_1(buffer);
+    printf("AoC 2015, day 01, part 1: %d\n", answer_p1);
+
+    int answer_p2 = solve_aoc_2015_day_01_part_2(buffer);
+    printf("AoC 2015, day 01, part 2: %d\n", answer_p2);
 
     free(buffer);
     return 0;
