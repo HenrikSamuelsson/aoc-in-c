@@ -102,10 +102,12 @@ int main(int argc, char *argv[])
         return run_tests() ? 0 : 1;
     }
 
-    const char *path = "input/2015-day01.txt";
+    const char *path = (argc > 1) ? argv[1] : "data/2015-day01.txt";
+
     char *buffer = read_input_alloc(path);
     if (!buffer)
     {
+        perror(path); // shows EXACT path it tried
         return 1;
     }
 

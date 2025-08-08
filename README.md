@@ -9,7 +9,7 @@ This project **does not include input files** from [Advent of Code](https://adve
 To run a puzzle solution, first create an input folder at the root level:
 
 ```bash
-mkdir -p input
+mkdir -p data
 ```
 
 Then in this folder save your personal input as:
@@ -40,7 +40,7 @@ make run day=DD year=YYYY
 **Example:**
 
 ```bash
-make run day=01 year=2015
+make run year=2015 day=0
 ```
 
 This compiles `src/2015/day01.c` and runs the resulting binary.

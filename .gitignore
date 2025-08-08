@@ -54,5 +54,5 @@ dkms.conf
 # debug information files
 *.dwo
 
-# Personal input files
-input/
+# Personal files with AoC input data
+data/
