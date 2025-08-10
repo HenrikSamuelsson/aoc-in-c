@@ -1,20 +1,33 @@
-CC=gcc
-CFLAGS=-Wall -Wextra -O2 -Isrc -Iinclude
-BIN=bin
+CC      := gcc
+CFLAGS  := -Wall -Wextra -std=c11 -I src -I include
 
-DAY   ?= $(day)
-YEAR  ?= $(year)
+SRC_DIR := src
+OBJ_DIR := build
+BIN_DIR := bin
 
-all:
-	@echo "Usage: make run day=DD year=YYYY"
-	@echo "Example: make run day=01 year=2015"
+SRC := $(SRC_DIR)/main.c \
+       $(SRC_DIR)/2015/day01.c \
+       $(SRC_DIR)/input.c
 
-run: $(TARGET)
-	@if [ -z "$(YEAR)" ] || [ -z "$(DAY)" ]; then \
-	  echo "Usage: make run year=2015 day=01"; exit 1; \
-	fi
-	@INPUT_FILE="$(CURDIR)/data/$(YEAR)-day$(DAY).txt"; \
-	echo ">> $(TARGET) $$INPUT_FILE"; \
-	$(TARGET) "$$INPUT_FILE"
+OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+TARGET := $(BIN_DIR)/day01
 
-.PHONY: all run
+.PHONY: all clean dirs
+
+all: dirs $(TARGET)
+
+dirs:
+	@if not exist "$(BIN_DIR)" mkdir "$(BIN_DIR)"
+	@if not exist "$(OBJ_DIR)\2015" mkdir "$(OBJ_DIR)\2015"
+
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# ensure the object directory exists (Windows-safe)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@if not exist "$(subst /,\,$(dir $@))" mkdir "$(subst /,\,$(dir $@))"
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	@if exist "$(BIN_DIR)" rmdir /s /q "$(BIN_DIR)"
+	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"

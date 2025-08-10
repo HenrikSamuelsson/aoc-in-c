@@ -1,8 +1,10 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "2015/day01.h"
+#include "input.h"
 
 struct test_case
 {
