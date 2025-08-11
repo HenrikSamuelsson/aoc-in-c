@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "2015/day01.h"
+#include "2015/aoc_2015_day_01.h"
 #include "input.h"
 
 struct test_case
