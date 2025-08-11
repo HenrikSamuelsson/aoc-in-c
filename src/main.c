@@ -19,13 +19,13 @@ const struct test_case part_1_tests[] = {
 
 bool run_tests(void)
 {
-    int num_tests = sizeof(part_1_tests) / sizeof(part_1_tests[0]);
-    for (int i = 0; i < num_tests; ++i)
+    size_t num_tests = sizeof(part_1_tests) / sizeof(part_1_tests[0]);
+    for (size_t i = 0; i < num_tests; ++i)
     {
         int result = solve_aoc_2015_day_01_part_1(part_1_tests[i].input);
         if (result != part_1_tests[i].expected)
         {
-            printf("Test %d failed: input \"%s\" -> expected %d, got %d\n",
+            printf("Test %zu failed: input \"%s\" -> expected %d, got %d\n",
                    i + 1, part_1_tests[i].input, part_1_tests[i].expected,
                    result);
             return false;
@@ -40,13 +40,13 @@ bool run_tests(void)
         {"()())", 5},
     };
 
-    for (int i = 0; i < sizeof(part2_tests) / sizeof(part2_tests[0]); ++i)
+    for (size_t i = 0; i < sizeof(part2_tests) / sizeof(part2_tests[0]); ++i)
     {
         int result = solve_aoc_2015_day_01_part_2(part2_tests[i].input);
         if (result != part2_tests[i].expected)
         {
             printf(
-                "Part 2 Test %d failed: input \"%s\" -> expected %d, got %d\n",
+                "Part 2 Test %zu failed: input \"%s\" -> expected %d, got %d\n",
                 i + 1, part2_tests[i].input, part2_tests[i].expected, result);
             return false;
         }
