@@ -1,4 +1,4 @@
-#include <stdbool.h>
+﻿#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,9 +45,10 @@ bool run_tests(void)
         int result = solve_aoc_2015_day_01_part_2(part2_tests[i].input);
         if (result != part2_tests[i].expected)
         {
-            printf(
-                "Part 2 Test %zu failed: input \"%s\" -> expected %d, got %d\n",
-                i + 1, part2_tests[i].input, part2_tests[i].expected, result);
+            printf("Part 2 Test %zu failed: input \"%s\" -> expected %d, got "
+                   "%d\n",
+                   i + 1, part2_tests[i].input, part2_tests[i].expected,
+                   result);
             return false;
         }
     }
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
         return run_tests() ? 0 : 1;
     }
 
-    const char *path = (argc > 1) ? argv[1] : "data/2015-day01.txt";
+    const char *path = (argc > 1) ? argv[1] : "data/aoc_2015_day_01_input.txt";
 
     char *buffer = read_input_alloc(path);
     if (!buffer)

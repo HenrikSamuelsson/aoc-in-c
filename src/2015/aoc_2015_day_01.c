@@ -1,4 +1,4 @@
-#include <stdbool.h>
+﻿#include <stdbool.h>
 
 int solve_aoc_2015_day_01_part_1(const char *instructions)
 {
