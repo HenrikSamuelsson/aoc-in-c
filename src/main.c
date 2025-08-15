@@ -124,11 +124,11 @@ static int run_day1(const char *path)
         return 1;
     }
 
-    int p1 = solve_aoc_2015_day_01_part_1(buffer);
-    printf("AoC 2015, day 01, part 1: %d\n", p1);
+    int part_1_result = solve_aoc_2015_day_01_part_1(buffer);
+    printf("AoC 2015, day 01, part 1: %d\n", part_1_result);
 
-    int p2 = solve_aoc_2015_day_01_part_2(buffer);
-    printf("AoC 2015, day 01, part 2: %d\n", p2);
+    int part2_result = solve_aoc_2015_day_01_part_2(buffer);
+    printf("AoC 2015, day 01, part 2: %d\n", part2_result);
 
     free(buffer);
     return 0;
@@ -143,11 +143,11 @@ static int run_day2(const char *path)
         return 1;
     }
 
-    int p1 = solve_aoc_2015_day_02_part_1(buffer);
-    printf("AoC 2015, day 02, part 1: %d\n", p1);
+    int part_1_result = solve_aoc_2015_day_02_part_1(buffer);
+    printf("AoC 2015, day 02, part 1: %d\n", part_1_result);
 
-    int p2 = solve_aoc_2015_day_02_part_2(buffer);
-    printf("AoC 2015, day 02, part 2: %d\n", p2);
+    int part_2_result = solve_aoc_2015_day_02_part_2(buffer);
+    printf("AoC 2015, day 02, part 2: %d\n", part_2_result);
 
     free(buffer);
     return 0;
