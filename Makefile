@@ -1,33 +1,77 @@
-CC      := gcc
-CFLAGS  := -Wall -Wextra -std=c11 -I src -I include
+# AoC in C - Windows-friendly Makefile (PowerShell/CMD)
+SHELL := cmd
+.SHELLFLAGS := /C
 
-SRC_DIR := src
-OBJ_DIR := build
-BIN_DIR := bin
+# ---- Toolchain ----
+CC = gcc
+CFLAGS = -std=c11 -O2 -Wall -Wextra -Wpedantic
+CPPFLAGS = -Iinclude -Iinclude/2015
 
-SRC := $(SRC_DIR)/main.c \
-       $(SRC_DIR)/2015/day01.c \
-       $(SRC_DIR)/input.c
+# ---- Dirs ----
+SRCDIR = src
+BUILDDIR = build
+BINDIR = bin
 
-OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-TARGET := $(BIN_DIR)/day01
+# ---- Output ----
+EXE = $(BINDIR)\aoc.exe
 
-.PHONY: all clean dirs
+# ---- Sources ----
+SRC_ROOT = $(SRCDIR)/main.c
+SRC_SUB  = \
+  $(SRCDIR)/input.c \
+  $(SRCDIR)/2015/aoc_2015_day_01.c \
+  $(SRCDIR)/2015/aoc_2015_day_02.c
 
-all: dirs $(TARGET)
+# ---- Objects ----
+OBJ_ROOT = $(BUILDDIR)/main.o
+OBJ_SUB  = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRC_SUB))
+OBJ      = $(OBJ_ROOT) $(OBJ_SUB)
+
+.PHONY: all run run1 run2 test clean dirs FORCE help
+
+all: dirs $(EXE)
+
+help:
+	@echo make / make all  - build $(EXE)
+	@echo make run         - run both days
+	@echo make run1        - run day 1
+	@echo make run2        - run day 2
+	@echo make test        - run unit tests
+	@echo make clean       - remove build outputs
 
 dirs:
-	@if not exist "$(BIN_DIR)" mkdir "$(BIN_DIR)"
-	@if not exist "$(OBJ_DIR)\2015" mkdir "$(OBJ_DIR)\2015"
+	@if not exist "$(BINDIR)"        mkdir "$(BINDIR)"
+	@if not exist "$(BUILDDIR)"      mkdir "$(BUILDDIR)"
+	@if not exist "$(BINDIR)\."      rem keep cmd happy
+	@if not exist "$(BUILDDIR)\2015" mkdir "$(BUILDDIR)\2015"
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+# ---- Link ----
+$(EXE): $(OBJ)
+	$(CC) $(OBJ) -o $@
 
-# ensure the object directory exists (Windows-safe)
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# ---- Compile rules ----
+$(OBJ_ROOT): $(SRC_ROOT)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	@if not exist "$(subst /,\,$(dir $@))" mkdir "$(subst /,\,$(dir $@))"
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# ---- Convenience ----
+FORCE:
+
+run: all FORCE
+	@$(EXE)
+
+run1: all FORCE
+	@$(EXE) 1
+
+run2: all FORCE
+	@$(EXE) 2
+
+test: all FORCE
+	@$(EXE) test
 
 clean:
-	@if exist "$(BIN_DIR)" rmdir /s /q "$(BIN_DIR)"
-	@if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"
+	@if exist "$(BUILDDIR)" rmdir /S /Q "$(BUILDDIR)"
+	@if exist "$(EXE)" del /Q "$(EXE)"

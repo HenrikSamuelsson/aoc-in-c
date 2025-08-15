@@ -12,7 +12,8 @@
     "Mkfile",
     "symvers",
     "vararg",
-    "Wextra"
+    "Wextra",
+    "Wpedantic"
   ],
   "ignorePaths": [
     "bin",
