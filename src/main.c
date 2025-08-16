@@ -203,17 +203,17 @@ int main(int argc, char *argv[])
     if (strcmp(mode, "all") == 0)
     {
         /* Optional custom paths for each day in registry order */
-        int overall_rc = 0;
+        int overall_result_code = 0;
         for (size_t i = 0; i < days_count; ++i)
         {
             const char *path_i = (2 + (int)i < argc) ? argv[2 + i] : NULL;
-            int rc = run_one_day(&days[i], path_i);
-            if (rc != 0)
+            int result_code = run_one_day(&days[i], path_i);
+            if (result_code != 0)
             {
-                overall_rc = rc;
+                overall_result_code = result_code;
             }
         }
-        return overall_rc;
+        return overall_result_code;
     }
 
     /* If not "all", treat as specific day number */
