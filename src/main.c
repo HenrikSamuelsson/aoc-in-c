@@ -13,6 +13,8 @@ struct test_case
     int expected;
 };
 
+static const int DECIMAL_BASE = 10;
+
 /* -------------------- Day 1 tests -------------------- */
 
 static bool run_day1_tests(void)
@@ -138,10 +140,12 @@ static const size_t days_count = sizeof(days) / sizeof(days[0]);
 static inline const day_spec *find_day(int day_number)
 {
     for (size_t i = 0; i < days_count; ++i)
+    {
         if (days[i].day == day_number)
         {
             return &days[i];
         }
+    }
     return NULL;
 }
 
@@ -218,7 +222,7 @@ int main(int argc, char *argv[])
 
     /* If not "all", treat as specific day number */
     char *endptr = NULL;
-    long day_num = strtol(mode, &endptr, 10);
+    long day_num = strtol(mode, &endptr, DECIMAL_BASE);
     if (*mode != '\0' && *endptr == '\0')
     {
         const day_spec *spec = find_day((int)day_num);
