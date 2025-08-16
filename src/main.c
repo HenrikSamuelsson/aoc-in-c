@@ -1,4 +1,5 @@
-﻿#include <stdbool.h>
+﻿#include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -183,6 +184,25 @@ static void print_usage(const char *prog)
     }
 }
 
+/* Prints an error message + usage, returns non-zero (failure). */
+static int handle_invalid_usagef(const char *prog, const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    int written = vfprintf(stderr, fmt, ap);
+    va_end(ap);
+
+    if (written < 0)
+    {
+        perror("vfprintf failed");
+        return 1;
+    }
+
+    (void)fputc('\n', stderr); /* newline after message */
+    print_usage(prog);
+    return 1;
+}
+
 /* -------------------- Main -------------------- */
 
 int main(int argc, char *argv[])
@@ -226,18 +246,17 @@ int main(int argc, char *argv[])
     if (*mode != '\0' && *endptr == '\0')
     {
         const day_spec *spec = find_day((int)day_num);
+        /* Unknown day */
         if (!spec)
         {
-            fprintf(stderr, "Unknown day: %ld\n", day_num);
-            print_usage(argv[0]);
-            return 1;
+            return handle_invalid_usagef(argv[0], "Unknown day: %ld", day_num);
         }
         const char *custom_path = (argc > 2) ? argv[2] : NULL;
         return run_one_day(spec, custom_path);
     }
 
     /* Fallback: unknown mode */
-    fprintf(stderr, "Unknown command: %s\n", mode);
-    print_usage(argv[0]);
+    return handle_invalid_usagef(argv[0], "Unknown command: %s", mode);
+
     return 1;
 }
