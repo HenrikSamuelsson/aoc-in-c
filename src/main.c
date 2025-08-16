@@ -139,7 +139,9 @@ static inline const day_spec *find_day(int day_number)
 {
     for (size_t i = 0; i < days_count; ++i)
         if (days[i].day == day_number)
+        {
             return &days[i];
+        }
     return NULL;
 }
 
