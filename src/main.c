@@ -113,10 +113,40 @@ static bool run_tests(void)
     return ok1 && ok2;
 }
 
-/* -------------------- Runners -------------------- */
+/* -------------------- Generic runner & registry -------------------- */
 
-static int run_day1(const char *path)
+typedef int (*solve_fn)(const char *input);
+
+typedef struct
 {
+    int year;
+    int day; // 1..25
+    const char *default_path;
+    solve_fn part1;
+    solve_fn part2;
+} day_spec;
+
+/* Registry: add new days here */
+static const day_spec days[] = {
+    {2015, 1, "data/aoc_2015_day_01_input.txt", solve_aoc_2015_day_01_part_1,
+     solve_aoc_2015_day_01_part_2},
+    {2015, 2, "data/aoc_2015_day_02_input.txt", solve_aoc_2015_day_02_part_1,
+     solve_aoc_2015_day_02_part_2},
+};
+static const size_t days_count = sizeof(days) / sizeof(days[0]);
+
+static inline const day_spec *find_day(int day_number)
+{
+    for (size_t i = 0; i < days_count; ++i)
+        if (days[i].day == day_number)
+            return &days[i];
+    return NULL;
+}
+
+static int run_one_day(const day_spec *spec, const char *path_opt)
+{
+    const char *path = path_opt ? path_opt : spec->default_path;
+
     char *buffer = read_input_alloc(path);
     if (!buffer)
     {
@@ -124,54 +154,33 @@ static int run_day1(const char *path)
         return 1;
     }
 
-    int part_1_result = solve_aoc_2015_day_01_part_1(buffer);
-    printf("AoC 2015, day 01, part 1: %d\n", part_1_result);
-
-    int part2_result = solve_aoc_2015_day_01_part_2(buffer);
-    printf("AoC 2015, day 01, part 2: %d\n", part2_result);
-
-    free(buffer);
-    return 0;
-}
-
-static int run_day2(const char *path)
-{
-    char *buffer = read_input_alloc(path);
-    if (!buffer)
-    {
-        perror(path);
-        return 1;
-    }
-
-    int part_1_result = solve_aoc_2015_day_02_part_1(buffer);
-    printf("AoC 2015, day 02, part 1: %d\n", part_1_result);
-
-    int part_2_result = solve_aoc_2015_day_02_part_2(buffer);
-    printf("AoC 2015, day 02, part 2: %d\n", part_2_result);
+    /* Zero-pad day to two digits for consistent output. */
+    printf("AoC %d, day %02d, part 1: %d\n", spec->year, spec->day,
+           spec->part1(buffer));
+    printf("AoC %d, day %02d, part 2: %d\n", spec->year, spec->day,
+           spec->part2(buffer));
 
     free(buffer);
     return 0;
 }
-
-/* -------------------- Main -------------------- */
 
 static void print_usage(const char *prog)
 {
     printf("Usage:\n");
     printf("  %s test\n", prog);
-    printf("  %s 1 [path_day1]\n", prog);
-    printf("  %s 2 [path_day2]\n", prog);
-    printf("  %s [all] [path_day1] [path_day2]\n", prog);
-    printf("\nDefaults:\n");
-    printf("  path_day1 = data/aoc_2015_day_01_input.txt\n");
-    printf("  path_day2 = data/aoc_2015_day_02_input.txt\n");
+    printf("  %s <day> [path]\n", prog);
+    printf("  %s all [path_day1] [path_day2] ...\n", prog);
+    printf("\nRegistered days:\n");
+    for (size_t i = 0; i < days_count; ++i)
+    {
+        printf("  %02d  default: %s\n", days[i].day, days[i].default_path);
+    }
 }
+
+/* -------------------- Main -------------------- */
 
 int main(int argc, char *argv[])
 {
-    const char *default_path1 = "data/aoc_2015_day_01_input.txt";
-    const char *default_path2 = "data/aoc_2015_day_02_input.txt";
-
     if (argc > 1 && strcmp(argv[1], "help") == 0)
     {
         print_usage(argv[0]);
@@ -184,31 +193,43 @@ int main(int argc, char *argv[])
     }
 
     /* Mode selection:
-       - No args or "all": run both days (optionally with paths)
-       - "1" [path] or "2" [path]: run that day only
+       - No args or "all": run all registered days (optional per-day paths)
+       - "<n>" [path]: run that day with optional input path
     */
     const char *mode = (argc > 1) ? argv[1] : "all";
 
-    int result = 0;
-
-    if (strcmp(mode, "1") == 0)
+    if (strcmp(mode, "all") == 0)
     {
-        const char *path1 = (argc > 2) ? argv[2] : default_path1;
-        result = run_day1(path1);
-    }
-    else if (strcmp(mode, "2") == 0)
-    {
-        const char *path2 = (argc > 2) ? argv[2] : default_path2;
-        result = run_day2(path2);
-    }
-    else
-    {
-        const char *path1 = (argc > 2) ? argv[2] : default_path1;
-        const char *path2 = (argc > 3) ? argv[3] : default_path2;
-        int rc1 = run_day1(path1);
-        int rc2 = run_day2(path2);
-        result = (rc1 == 0 && rc2 == 0) ? 0 : 1;
+        /* Optional custom paths for each day in registry order */
+        int overall_rc = 0;
+        for (size_t i = 0; i < days_count; ++i)
+        {
+            const char *path_i = (2 + (int)i < argc) ? argv[2 + i] : NULL;
+            int rc = run_one_day(&days[i], path_i);
+            if (rc != 0)
+                overall_rc = rc;
+        }
+        return overall_rc;
     }
 
-    return result;
+    /* If not "all", treat as specific day number */
+    char *endptr = NULL;
+    long day_num = strtol(mode, &endptr, 10);
+    if (*mode != '\0' && *endptr == '\0')
+    {
+        const day_spec *spec = find_day((int)day_num);
+        if (!spec)
+        {
+            fprintf(stderr, "Unknown day: %ld\n", day_num);
+            print_usage(argv[0]);
+            return 1;
+        }
+        const char *custom_path = (argc > 2) ? argv[2] : NULL;
+        return run_one_day(spec, custom_path);
+    }
+
+    /* Fallback: unknown mode */
+    fprintf(stderr, "Unknown command: %s\n", mode);
+    print_usage(argv[0]);
+    return 1;
 }
