@@ -207,7 +207,9 @@ int main(int argc, char *argv[])
             const char *path_i = (2 + (int)i < argc) ? argv[2 + i] : NULL;
             int rc = run_one_day(&days[i], path_i);
             if (rc != 0)
+            {
                 overall_rc = rc;
+            }
         }
         return overall_rc;
     }
