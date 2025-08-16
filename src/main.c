@@ -189,15 +189,17 @@ int main(int argc, char *argv[])
     */
     const char *mode = (argc > 1) ? argv[1] : "all";
 
+    int result = 0;
+
     if (strcmp(mode, "1") == 0)
     {
         const char *path1 = (argc > 2) ? argv[2] : default_path1;
-        return run_day1(path1);
+        result = run_day1(path1);
     }
     else if (strcmp(mode, "2") == 0)
     {
         const char *path2 = (argc > 2) ? argv[2] : default_path2;
-        return run_day2(path2);
+        result = run_day2(path2);
     }
     else
     {
@@ -205,6 +207,8 @@ int main(int argc, char *argv[])
         const char *path2 = (argc > 3) ? argv[3] : default_path2;
         int rc1 = run_day1(path1);
         int rc2 = run_day2(path2);
-        return (rc1 == 0 && rc2 == 0) ? 0 : 1;
+        result = (rc1 == 0 && rc2 == 0) ? 0 : 1;
     }
+
+    return result;
 }
