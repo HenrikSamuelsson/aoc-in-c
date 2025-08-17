@@ -187,10 +187,10 @@ static void print_usage(const char *prog)
 /* Prints an error message + usage, returns non-zero (failure). */
 static int handle_invalid_usage(const char *prog, const char *fmt, ...)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    int written = vfprintf(stderr, fmt, ap);
-    va_end(ap);
+    va_list var_args = {0};
+    va_start(var_args, fmt);
+    int written = vfprintf(stderr, fmt, var_args);
+    va_end(var_args);
 
     if (written < 0)
     {
