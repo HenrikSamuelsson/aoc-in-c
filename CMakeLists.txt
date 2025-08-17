@@ -52,7 +52,19 @@ endif()
 # Testing: run built binary with 'test' subcommand
 include(CTest)
 if (AOC_BUILD_TESTING)
-    add_test(NAME aoc_tests COMMAND aoc test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    # Use the built target path explicitly
+    add_test(NAME aoc_test_all
+             COMMAND $<TARGET_FILE:aoc> test
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+    # Mirror Makefile convenience targets 'run1' and 'run2'
+    add_test(NAME aoc_run_day01
+             COMMAND $<TARGET_FILE:aoc> 1
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+    add_test(NAME aoc_run_day02
+             COMMAND $<TARGET_FILE:aoc> 2
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 # Install (optional)
