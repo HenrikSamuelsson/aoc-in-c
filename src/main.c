@@ -185,7 +185,7 @@ static void print_usage(const char *prog)
 }
 
 /* Prints an error message + usage, returns non-zero (failure). */
-static int handle_invalid_usagef(const char *prog, const char *fmt, ...)
+static int handle_invalid_usage(const char *prog, const char *fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
@@ -249,14 +249,14 @@ int main(int argc, char *argv[])
         /* Unknown day */
         if (!spec)
         {
-            return handle_invalid_usagef(argv[0], "Unknown day: %ld", day_num);
+            return handle_invalid_usage(argv[0], "Unknown day: %ld", day_num);
         }
         const char *custom_path = (argc > 2) ? argv[2] : NULL;
         return run_one_day(spec, custom_path);
     }
 
     /* Fallback: unknown mode */
-    return handle_invalid_usagef(argv[0], "Unknown command: %s", mode);
+    return handle_invalid_usage(argv[0], "Unknown command: %s", mode);
 
     return 1;
 }
