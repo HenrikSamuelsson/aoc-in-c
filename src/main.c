@@ -8,6 +8,19 @@
 #include "2015/aoc_2015_day_02.h"
 #include "input.h"
 
+/* ---- CLI context to avoid easily-swappable parameters ---- */
+struct cli_ctx
+{
+    const char *prog;
+};
+
+#if defined(__GNUC__) || defined(__clang__)
+#define PRINTF_LIKE(fmt_idx, va_idx)                                          \
+    __attribute__((format(printf, fmt_idx, va_idx)))
+#else
+#define PRINTF_LIKE(fmt_idx, va_idx)
+#endif
+
 struct test_case
 {
     const char *input;
@@ -185,12 +198,15 @@ static void print_usage(const char *prog)
 }
 
 /* Prints an error message + usage, returns non-zero (failure). */
-static int handle_invalid_usage(const char *prog, const char *fmt, ...)
+static int handle_invalid_usage(struct cli_ctx ctx, const char *fmt, ...)
+    PRINTF_LIKE(2, 3);
+
+static int handle_invalid_usage(struct cli_ctx ctx, const char *fmt, ...)
 {
-    va_list var_args = {0};
-    va_start(var_args, fmt);
-    int written = vfprintf(stderr, fmt, var_args);
-    va_end(var_args);
+    va_list args = {0};
+    va_start(args, fmt);
+    int written = vfprintf(stderr, fmt, args);
+    va_end(args);
 
     if (written < 0)
     {
@@ -199,7 +215,7 @@ static int handle_invalid_usage(const char *prog, const char *fmt, ...)
     }
 
     (void)fputc('\n', stderr); /* newline after message */
-    print_usage(prog);
+    print_usage(ctx.prog);
     return 1;
 }
 
@@ -207,9 +223,11 @@ static int handle_invalid_usage(const char *prog, const char *fmt, ...)
 
 int main(int argc, char *argv[])
 {
+    const char *prog = (argc > 0 && argv[0]) ? argv[0] : "aoc";
+    struct cli_ctx ctx = {.prog = prog};
     if (argc > 1 && strcmp(argv[1], "help") == 0)
     {
-        print_usage(argv[0]);
+        print_usage(prog);
         return 0;
     }
 
@@ -249,14 +267,14 @@ int main(int argc, char *argv[])
         /* Unknown day */
         if (!spec)
         {
-            return handle_invalid_usage(argv[0], "Unknown day: %ld", day_num);
+            return handle_invalid_usage(ctx, "Unknown day: %ld", day_num);
         }
         const char *custom_path = (argc > 2) ? argv[2] : NULL;
         return run_one_day(spec, custom_path);
     }
 
     /* Fallback: unknown mode */
-    return handle_invalid_usage(argv[0], "Unknown command: %s", mode);
+    return handle_invalid_usage(ctx, "Unknown command: %s", mode);
 
     return 1;
 }

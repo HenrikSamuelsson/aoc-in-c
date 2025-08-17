@@ -42,6 +42,18 @@
 *.idb
 *.pdb
 
+# CMake build artifacts
+/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Ninja build artifacts
+.ninja_deps
+.ninja_log
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
