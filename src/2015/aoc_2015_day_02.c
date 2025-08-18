@@ -1,8 +1,8 @@
 #include "aoc_2015_day_02.h"
 #include <stdlib.h>
 
-static inline int min_int(int a, int b) { return a < b ? a : b; }
-static inline int max_int(int a, int b) { return a > b ? a : b; }
+static inline int min_int(int lhs, int rhs) { return lhs < rhs ? lhs : rhs; }
+static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 
 // Parse a line of the form "LxWxH" (case-insensitive 'x').
 // Advances *p past the end-of-line. Returns:
