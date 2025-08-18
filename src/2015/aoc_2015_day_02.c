@@ -1,7 +1,5 @@
 #include "aoc_2015_day_02.h"
-#include <ctype.h>
 #include <stdlib.h>
-
 
 static inline int min_int(int a, int b) { return a < b ? a : b; }
 static inline int max_int(int a, int b) { return a > b ? a : b; }
