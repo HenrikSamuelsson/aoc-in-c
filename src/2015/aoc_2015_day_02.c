@@ -15,7 +15,9 @@ static int parse_dims(const char **p, int *l, int *w, int *h)
 
     // Skip leading whitespace/newlines
     while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n')
+    {
         s++;
+    }
     if (*s == '\0')
     {
         *p = s;
