@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 
 project(aoc_in_c LANGUAGES C)
 
+# Export compile_commands.json for clangd/clang tooling
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Project-wide include paths for headers
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/2015
+)
+
+
 # Options
 option(AOC_ENABLE_WARNINGS "Enable strict warnings" ON)
 option(AOC_ENABLE_SANITIZERS "Enable Address/UB sanitizers (non-MSVC)" OFF)

@@ -4,6 +4,7 @@
   "words": [
     "Allman",
     "bugprone",
+    "clangd",
     "cppcoreguidelines",
     "ctest",
     "DCMAKE",
