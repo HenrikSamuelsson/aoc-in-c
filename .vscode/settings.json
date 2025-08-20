@@ -3,7 +3,8 @@
         "--compile-commands-dir=.",
         "--clang-tidy",
         "--all-scopes-completion",
-        "--background-index"
+        "--background-index",
+        "--compile-commands-dir=build"
     ],
     "C_Cpp.codeAnalysis.clangTidy.enabled": true
 }
