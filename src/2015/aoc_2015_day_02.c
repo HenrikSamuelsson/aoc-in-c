@@ -87,15 +87,19 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
         int l, w, h;
         int st = parse_dims(&p, &l, &w, &h);
         if (st == 0)
+        {
             break; // end
+        }
         if (st < 0)
+        {
             continue; // skip invalid/blank line
+        }
 
-        int s1 = l * w;
-        int s2 = w * h;
-        int s3 = h * l;
-        int surface = 2 * s1 + 2 * s2 + 2 * s3;
-        int slack = min_int(s1, min_int(s2, s3));
+        int surface_1 = l * w;
+        int surface_2 = w * h;
+        int surface_3 = h * l;
+        int surface = (2 * surface_1) + (2 * surface_2) + (2 * surface_3);
+        int slack = min_int(surface_1, min_int(surface_2, surface_3));
         total += (long long)surface + (long long)slack;
     }
 
@@ -105,7 +109,9 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
 int solve_aoc_2015_day_02_part_2(const char *instructions)
 {
     if (!instructions)
+    {
         return 0;
+    }
     const char *p = instructions;
     long long total = 0;
 
@@ -114,9 +120,13 @@ int solve_aoc_2015_day_02_part_2(const char *instructions)
         int l, w, h;
         int st = parse_dims(&p, &l, &w, &h);
         if (st == 0)
+        {
             break; // end
+        }
         if (st < 0)
+        {
             continue; // skip invalid/blank line
+        }
 
         // Bow is volume
         long long bow = (long long)l * (long long)w * (long long)h;
