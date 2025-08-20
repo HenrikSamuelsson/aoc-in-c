@@ -9,9 +9,10 @@ static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 //   1 on success (and sets l, w, h),
 //   0 when there's nothing more to parse (end of string),
 //  -1 if the line is not a valid dimension (line is skipped).
-static int parse_dims(const char **p, int *l, int *w, int *h)
+static int parse_dims(const char **cursor, int *length, int *width,
+                      int *height)
 {
-    const char *s = *p;
+    const char *s = *cursor;
 
     // Skip leading whitespace/newlines
     while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n')
@@ -20,11 +21,13 @@ static int parse_dims(const char **p, int *l, int *w, int *h)
     }
     if (*s == '\0')
     {
-        *p = s;
+        *cursor = s;
         return 0;
     } // done
 
-    char *e1, *e2, *e3;
+    char *e1;
+    char *e2;
+    char *e3;
     long L = strtol(s, &e1, 10);
     if (e1 == s || (*e1 != 'x' && *e1 != 'X'))
     {
@@ -33,7 +36,7 @@ static int parse_dims(const char **p, int *l, int *w, int *h)
             s++;
         if (*s == '\n')
             s++;
-        *p = s;
+        *cursor = s;
         return -1;
     }
 
@@ -44,7 +47,7 @@ static int parse_dims(const char **p, int *l, int *w, int *h)
             s++;
         if (*s == '\n')
             s++;
-        *p = s;
+        *cursor = s;
         return -1;
     }
 
@@ -57,21 +60,25 @@ static int parse_dims(const char **p, int *l, int *w, int *h)
     if (*e3 == '\n')
         e3++;
 
-    *p = e3;
+    *cursor = e3;
 
     if (L <= 0 || W <= 0 || H <= 0)
+    {
         return -1;
+    }
 
-    *l = (int)L;
-    *w = (int)W;
-    *h = (int)H;
+    *length = (int)L;
+    *width = (int)W;
+    *height = (int)H;
     return 1;
 }
 
 int solve_aoc_2015_day_02_part_1(const char *instructions)
 {
     if (!instructions)
+    {
         return 0;
+    }
     const char *p = instructions;
     long long total = 0;
 
