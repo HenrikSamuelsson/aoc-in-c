@@ -63,8 +63,14 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# debug information files
+# Debug information files
 *.dwo
+
+# Clangd index/cache
+.clangd/
+.cache/
+.cache/clangd/
+clangd.index/
 
 # Personal files with AoC input data
 data/
