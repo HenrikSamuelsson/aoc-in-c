@@ -12,42 +12,42 @@ static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 static int parse_dims(const char **cursor, int *length, int *width,
                       int *height)
 {
-    const char *s = *cursor;
+    const char *chr = *cursor;
 
     // Skip leading whitespace/newlines
-    while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n')
+    while (*chr == ' ' || *chr == '\t' || *chr == '\r' || *chr == '\n')
     {
-        s++;
+        chr++;
     }
-    if (*s == '\0')
+    if (*chr == '\0')
     {
-        *cursor = s;
+        *cursor = chr;
         return 0;
     } // done
 
     char *e1;
     char *e2;
     char *e3;
-    long L = strtol(s, &e1, 10);
-    if (e1 == s || (*e1 != 'x' && *e1 != 'X'))
+    long L = strtol(chr, &e1, 10);
+    if (e1 == chr || (*e1 != 'x' && *e1 != 'X'))
     {
         // Not a valid dimension line, skip to end-of-line
-        while (*s && *s != '\n')
-            s++;
-        if (*s == '\n')
-            s++;
-        *cursor = s;
+        while (*chr && *chr != '\n')
+            chr++;
+        if (*chr == '\n')
+            chr++;
+        *cursor = chr;
         return -1;
     }
 
     long W = strtol(e1 + 1, &e2, 10);
     if (e2 == (e1 + 1) || (*e2 != 'x' && *e2 != 'X'))
     {
-        while (*s && *s != '\n')
-            s++;
-        if (*s == '\n')
-            s++;
-        *cursor = s;
+        while (*chr && *chr != '\n')
+            chr++;
+        if (*chr == '\n')
+            chr++;
+        *cursor = chr;
         return -1;
     }
 
@@ -118,12 +118,12 @@ int solve_aoc_2015_day_02_part_2(const char *instructions)
     for (;;)
     {
         int l, w, h;
-        int st = parse_dims(&p, &l, &w, &h);
-        if (st == 0)
+        int parse_status = parse_dims(&p, &l, &w, &h);
+        if (parse_status == 0)
         {
             break; // end
         }
-        if (st < 0)
+        if (parse_status < 0)
         {
             continue; // skip invalid/blank line
         }
