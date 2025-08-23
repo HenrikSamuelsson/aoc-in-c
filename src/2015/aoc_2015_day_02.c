@@ -1,6 +1,17 @@
 #include "aoc_2015_day_02.h"
 #include <stdlib.h>
 
+/**
+ * \brief File-local constant used in parsing dimension strings.
+ *
+ * This is not part of the public API and are scoped to this translation unit
+ * only.
+ */
+enum
+{
+    DECIMAL_BASE = 10 /**< Numerical base for strtol (decimal). */
+};
+
 static inline int min_int(int lhs, int rhs) { return lhs < rhs ? lhs : rhs; }
 static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 
@@ -28,7 +39,7 @@ static int parse_dims(const char **cursor, int *length, int *width,
     char *e1;
     char *e2;
     char *e3;
-    long L = strtol(chr, &e1, 10);
+    long L = strtol(chr, &e1, DECIMAL_BASE);
     if (e1 == chr || (*e1 != 'x' && *e1 != 'X'))
     {
         // Not a valid dimension line, skip to end-of-line
