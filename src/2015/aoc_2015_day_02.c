@@ -19,12 +19,16 @@ static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 // Advances *cursor past the end-of-line.
 // Returns: 1 on success; 0 at end-of-string; -1 if the line is invalid
 // (skipped).
-static int parse_dims(const char **cursor, int *length, int *width,
-                      int *height)
+static int parse_dims(const char **cursor, Present *out)
 {
     const char *p = *cursor;
 
-    // If we're already at end-of-string, report "nothing more".
+    if (!cursor || !out)
+    {
+        return -1; // defensive guard
+    }
+
+    // End-of-input?
     if (*p == '\0')
     {
         *cursor = p;
@@ -33,11 +37,10 @@ static int parse_dims(const char **cursor, int *length, int *width,
 
     char *end_ptr = NULL;
 
-    // Parse L
-    long L = strtol(p, &end_ptr, DECIMAL_BASE);
+    // L
+    long L = strtol(p, &end_ptr, 10);
     if (end_ptr == p || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
-        // Invalid line: advance to EOL or EOS so caller makes progress.
         while (*p && *p != '\n')
         {
             p++;
@@ -50,9 +53,9 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
-    // Parse W
-    const char *w_start = end_ptr + 1; // skip 'x'
-    long W = strtol(w_start, &end_ptr, DECIMAL_BASE);
+    // W
+    const char *w_start = end_ptr + 1;
+    long W = strtol(w_start, &end_ptr, 10);
     if (end_ptr == w_start || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
         while (*p && *p != '\n')
@@ -67,11 +70,11 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
-    // Parse H
-    const char *h_start = end_ptr + 1; // skip 'x'
-    long H = strtol(h_start, &end_ptr, DECIMAL_BASE);
+    // H
+    const char *h_start = end_ptr + 1;
+    long H = strtol(h_start, &end_ptr, 10);
 
-    // Consume the rest of the line up to and including '\n' if present
+    // Move to end-of-line (consume trailing chars until newline/EOS)
     while (*end_ptr && *end_ptr != '\n')
     {
         end_ptr++;
@@ -82,15 +85,15 @@ static int parse_dims(const char **cursor, int *length, int *width,
     }
     *cursor = end_ptr;
 
-    // Validate values
+    // Validate and assign
     if (L <= 0 || W <= 0 || H <= 0)
     {
         return -1;
     }
 
-    *length = (int)L;
-    *width = (int)W;
-    *height = (int)H;
+    out->length = (int)L;
+    out->width = (int)W;
+    out->height = (int)H;
     return 1;
 }
 
@@ -105,8 +108,8 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
 
     for (;;)
     {
-        int l, w, h;
-        int parse_status = parse_dims(&p, &l, &w, &h);
+        Present present;
+        int parse_status = parse_dims(&p, &present);
         if (parse_status == 0)
         {
             break; // end
@@ -116,9 +119,9 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
             continue; // skip invalid/blank line
         }
 
-        int surface_1 = l * w;
-        int surface_2 = w * h;
-        int surface_3 = h * l;
+        int surface_1 = present.length * present.width;
+        int surface_2 = present.width * present.height;
+        int surface_3 = present.height * present.length;
         int surface = (2 * surface_1) + (2 * surface_2) + (2 * surface_3);
         int slack = min_int(surface_1, min_int(surface_2, surface_3));
         total += (long long)surface + (long long)slack;
@@ -138,8 +141,8 @@ int solve_aoc_2015_day_02_part_2(const char *instructions)
 
     for (;;)
     {
-        int l, w, h;
-        int parse_status = parse_dims(&p, &l, &w, &h);
+        Present present;
+        int parse_status = parse_dims(&p, &present);
         if (parse_status == 0)
         {
             break; // end
@@ -150,11 +153,13 @@ int solve_aoc_2015_day_02_part_2(const char *instructions)
         }
 
         // Bow is volume
-        long long bow = (long long)l * (long long)w * (long long)h;
+        long long bow = (long long)present.length * (long long)present.width *
+                        (long long)present.height;
 
         // Shortest perimeter = 2 * (sum of the two smallest edges)
-        int sum = l + w + h;
-        int longest = max_int(l, max_int(w, h));
+        int sum = present.length + present.width + present.height;
+        int longest =
+            max_int(present.length, max_int(present.width, present.height));
         int wrap = 2 * (sum - longest);
 
         total += bow + wrap;
