@@ -38,7 +38,7 @@ static int parse_dims(const char **cursor, Present *out)
     char *end_ptr = NULL;
 
     // L
-    long L = strtol(p, &end_ptr, 10);
+    long L = strtol(p, &end_ptr, DECIMAL_BASE);
     if (end_ptr == p || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
         while (*p && *p != '\n')
@@ -55,7 +55,7 @@ static int parse_dims(const char **cursor, Present *out)
 
     // W
     const char *w_start = end_ptr + 1;
-    long W = strtol(w_start, &end_ptr, 10);
+    long W = strtol(w_start, &end_ptr, DECIMAL_BASE);
     if (end_ptr == w_start || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
         while (*p && *p != '\n')
@@ -72,7 +72,7 @@ static int parse_dims(const char **cursor, Present *out)
 
     // H
     const char *h_start = end_ptr + 1;
-    long H = strtol(h_start, &end_ptr, 10);
+    long H = strtol(h_start, &end_ptr, DECIMAL_BASE);
 
     // Move to end-of-line (consume trailing chars until newline/EOS)
     while (*end_ptr && *end_ptr != '\n')
