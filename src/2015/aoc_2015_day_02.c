@@ -36,9 +36,9 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return 0;
     } // done
 
-    char *e1;
-    long L = strtol(chr, &e1, DECIMAL_BASE);
-    if (e1 == chr || (*e1 != 'x' && *e1 != 'X'))
+    char *end_ptr = NULL;
+    long L = strtol(chr, &end_ptr, DECIMAL_BASE);
+    if (end_ptr == chr || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
         // Not a valid dimension line, skip to end-of-line
         while (*chr && *chr != '\n')
@@ -53,9 +53,8 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
-    char *e2;
-    long W = strtol(e1 + 1, &e2, 10);
-    if (e2 == (e1 + 1) || (*e2 != 'x' && *e2 != 'X'))
+    long W = strtol(end_ptr + 1, &end_ptr, 10);
+    if (end_ptr == (end_ptr + 1) || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
         while (*chr && *chr != '\n')
         {
@@ -69,21 +68,20 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
-    char *e3;
-    long H = strtol(e2 + 1, &e3, 10);
+    long H = strtol(end_ptr + 1, &end_ptr, 10);
 
     // Move to end-of-line (consume trailing spaces/CR, stop after '\n' if
     // present)
-    while (*e3 && *e3 != '\n')
+    while (*end_ptr && *end_ptr != '\n')
     {
-        e3++;
+        end_ptr++;
     }
-    if (*e3 == '\n')
+    if (*end_ptr == '\n')
     {
-        e3++;
+        end_ptr++;
     }
 
-    *cursor = e3;
+    *cursor = end_ptr;
 
     if (L <= 0 || W <= 0 || H <= 0)
     {
