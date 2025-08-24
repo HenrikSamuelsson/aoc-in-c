@@ -37,8 +37,6 @@ static int parse_dims(const char **cursor, int *length, int *width,
     } // done
 
     char *e1;
-    char *e2;
-    char *e3;
     long L = strtol(chr, &e1, DECIMAL_BASE);
     if (e1 == chr || (*e1 != 'x' && *e1 != 'X'))
     {
@@ -55,6 +53,7 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
+    char *e2;
     long W = strtol(e1 + 1, &e2, 10);
     if (e2 == (e1 + 1) || (*e2 != 'x' && *e2 != 'X'))
     {
@@ -70,6 +69,7 @@ static int parse_dims(const char **cursor, int *length, int *width,
         return -1;
     }
 
+    char *e3;
     long H = strtol(e2 + 1, &e3, 10);
 
     // Move to end-of-line (consume trailing spaces/CR, stop after '\n' if
