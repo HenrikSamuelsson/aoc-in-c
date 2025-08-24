@@ -75,9 +75,13 @@ static int parse_dims(const char **cursor, int *length, int *width,
     // Move to end-of-line (consume trailing spaces/CR, stop after '\n' if
     // present)
     while (*e3 && *e3 != '\n')
+    {
         e3++;
+    }
     if (*e3 == '\n')
+    {
         e3++;
+    }
 
     *cursor = e3;
 
@@ -104,12 +108,12 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
     for (;;)
     {
         int l, w, h;
-        int st = parse_dims(&p, &l, &w, &h);
-        if (st == 0)
+        int parse_status = parse_dims(&p, &l, &w, &h);
+        if (parse_status == 0)
         {
             break; // end
         }
-        if (st < 0)
+        if (parse_status < 0)
         {
             continue; // skip invalid/blank line
         }
