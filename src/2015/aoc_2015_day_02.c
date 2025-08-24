@@ -15,63 +15,63 @@ enum
 static inline int min_int(int lhs, int rhs) { return lhs < rhs ? lhs : rhs; }
 static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 
-// Parse a line of the form "LxWxH" (case-insensitive 'x').
-// Advances *p past the end-of-line. Returns:
-//   1 on success (and sets l, w, h),
-//   0 when there's nothing more to parse (end of string),
-//  -1 if the line is not a valid dimension (line is skipped).
+// Parse a line "LxWxH" (case-insensitive 'x').
+// Advances *cursor past the end-of-line.
+// Returns: 1 on success; 0 at end-of-string; -1 if the line is invalid
+// (skipped).
 static int parse_dims(const char **cursor, int *length, int *width,
                       int *height)
 {
-    const char *chr = *cursor;
+    const char *p = *cursor;
 
-    // Skip leading whitespace/newlines
-    while (*chr == ' ' || *chr == '\t' || *chr == '\r' || *chr == '\n')
+    // If we're already at end-of-string, report "nothing more".
+    if (*p == '\0')
     {
-        chr++;
-    }
-    if (*chr == '\0')
-    {
-        *cursor = chr;
+        *cursor = p;
         return 0;
-    } // done
+    }
 
     char *end_ptr = NULL;
-    long L = strtol(chr, &end_ptr, DECIMAL_BASE);
-    if (end_ptr == chr || (*end_ptr != 'x' && *end_ptr != 'X'))
+
+    // Parse L
+    long L = strtol(p, &end_ptr, DECIMAL_BASE);
+    if (end_ptr == p || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
-        // Not a valid dimension line, skip to end-of-line
-        while (*chr && *chr != '\n')
+        // Invalid line: advance to EOL or EOS so caller makes progress.
+        while (*p && *p != '\n')
         {
-            chr++;
+            p++;
         }
-        if (*chr == '\n')
+        if (*p == '\n')
         {
-            chr++;
+            p++;
         }
-        *cursor = chr;
+        *cursor = p;
         return -1;
     }
 
-    long W = strtol(end_ptr + 1, &end_ptr, DECIMAL_BASE);
-    if (end_ptr == (end_ptr + 1) || (*end_ptr != 'x' && *end_ptr != 'X'))
+    // Parse W
+    const char *w_start = end_ptr + 1; // skip 'x'
+    long W = strtol(w_start, &end_ptr, DECIMAL_BASE);
+    if (end_ptr == w_start || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
-        while (*chr && *chr != '\n')
+        while (*p && *p != '\n')
         {
-            chr++;
+            p++;
         }
-        if (*chr == '\n')
+        if (*p == '\n')
         {
-            chr++;
+            p++;
         }
-        *cursor = chr;
+        *cursor = p;
         return -1;
     }
 
-    long H = strtol(end_ptr + 1, &end_ptr, DECIMAL_BASE);
+    // Parse H
+    const char *h_start = end_ptr + 1; // skip 'x'
+    long H = strtol(h_start, &end_ptr, DECIMAL_BASE);
 
-    // Move to end-of-line (consume trailing spaces/CR, stop after '\n' if
-    // present)
+    // Consume the rest of the line up to and including '\n' if present
     while (*end_ptr && *end_ptr != '\n')
     {
         end_ptr++;
@@ -80,9 +80,9 @@ static int parse_dims(const char **cursor, int *length, int *width,
     {
         end_ptr++;
     }
-
     *cursor = end_ptr;
 
+    // Validate values
     if (L <= 0 || W <= 0 || H <= 0)
     {
         return -1;
