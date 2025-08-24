@@ -44,9 +44,13 @@ static int parse_dims(const char **cursor, int *length, int *width,
     {
         // Not a valid dimension line, skip to end-of-line
         while (*chr && *chr != '\n')
+        {
             chr++;
+        }
         if (*chr == '\n')
+        {
             chr++;
+        }
         *cursor = chr;
         return -1;
     }
@@ -55,9 +59,13 @@ static int parse_dims(const char **cursor, int *length, int *width,
     if (e2 == (e1 + 1) || (*e2 != 'x' && *e2 != 'X'))
     {
         while (*chr && *chr != '\n')
+        {
             chr++;
+        }
         if (*chr == '\n')
+        {
             chr++;
+        }
         *cursor = chr;
         return -1;
     }
