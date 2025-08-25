@@ -1,7 +1,7 @@
 #ifndef AOC_2015_DAY_02_H
 #define AOC_2015_DAY_02_H
 
-typedef struct {
+typedef struct Present {
     int length;
     int width;
     int height;
