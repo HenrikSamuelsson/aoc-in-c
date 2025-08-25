@@ -21,7 +21,7 @@ static inline int max_int(int lhs, int rhs) { return lhs > rhs ? lhs : rhs; }
 // (skipped).
 static int parse_dims(const char **cursor, Present *out)
 {
-    const char *p = *cursor;
+    const char *input_char = *cursor;
 
     if (!cursor || !out)
     {
@@ -29,50 +29,50 @@ static int parse_dims(const char **cursor, Present *out)
     }
 
     // End-of-input?
-    if (*p == '\0')
+    if (*input_char == '\0')
     {
-        *cursor = p;
+        *cursor = input_char;
         return 0;
     }
 
     char *end_ptr = NULL;
 
     // L
-    long L = strtol(p, &end_ptr, DECIMAL_BASE);
-    if (end_ptr == p || (*end_ptr != 'x' && *end_ptr != 'X'))
+    long length = strtol(input_char, &end_ptr, DECIMAL_BASE);
+    if (end_ptr == input_char || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
-        while (*p && *p != '\n')
+        while (*input_char && *input_char != '\n')
         {
-            p++;
+            input_char++;
         }
-        if (*p == '\n')
+        if (*input_char == '\n')
         {
-            p++;
+            input_char++;
         }
-        *cursor = p;
+        *cursor = input_char;
         return -1;
     }
 
     // W
     const char *w_start = end_ptr + 1;
-    long W = strtol(w_start, &end_ptr, DECIMAL_BASE);
+    long width = strtol(w_start, &end_ptr, DECIMAL_BASE);
     if (end_ptr == w_start || (*end_ptr != 'x' && *end_ptr != 'X'))
     {
-        while (*p && *p != '\n')
+        while (*input_char && *input_char != '\n')
         {
-            p++;
+            input_char++;
         }
-        if (*p == '\n')
+        if (*input_char == '\n')
         {
-            p++;
+            input_char++;
         }
-        *cursor = p;
+        *cursor = input_char;
         return -1;
     }
 
     // H
     const char *h_start = end_ptr + 1;
-    long H = strtol(h_start, &end_ptr, DECIMAL_BASE);
+    long height = strtol(h_start, &end_ptr, DECIMAL_BASE);
 
     // Move to end-of-line (consume trailing chars until newline/EOS)
     while (*end_ptr && *end_ptr != '\n')
@@ -86,14 +86,14 @@ static int parse_dims(const char **cursor, Present *out)
     *cursor = end_ptr;
 
     // Validate and assign
-    if (L <= 0 || W <= 0 || H <= 0)
+    if (length <= 0 || width <= 0 || height <= 0)
     {
         return -1;
     }
 
-    out->length = (int)L;
-    out->width = (int)W;
-    out->height = (int)H;
+    out->length = (int)length;
+    out->width = (int)width;
+    out->height = (int)height;
     return 1;
 }
 
@@ -103,13 +103,13 @@ int solve_aoc_2015_day_02_part_1(const char *instructions)
     {
         return 0;
     }
-    const char *p = instructions;
+    const char *present_info = instructions;
     long long total = 0;
 
     for (;;)
     {
         Present present;
-        int parse_status = parse_dims(&p, &present);
+        int parse_status = parse_dims(&present_info, &present);
         if (parse_status == 0)
         {
             break; // end
@@ -136,13 +136,13 @@ int solve_aoc_2015_day_02_part_2(const char *instructions)
     {
         return 0;
     }
-    const char *p = instructions;
+    const char *present_info = instructions;
     long long total = 0;
 
     for (;;)
     {
         Present present;
-        int parse_status = parse_dims(&p, &present);
+        int parse_status = parse_dims(&present_info, &present);
         if (parse_status == 0)
         {
             break; // end
