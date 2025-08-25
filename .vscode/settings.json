@@ -1,10 +1,9 @@
 {
     "clangd.arguments": [
-        "--compile-commands-dir=.",
+        "---compile-commands-dir=build",
         "--clang-tidy",
         "--all-scopes-completion",
-        "--background-index",
-        "--compile-commands-dir=build"
+        "--background-index"
     ],
     "C_Cpp.codeAnalysis.clangTidy.enabled": true
 }
