@@ -75,53 +75,6 @@ static bool run_day1_tests(void)
     return true;
 }
 
-/* -------------------- Day 2 tests -------------------- */
-/* AoC 2015 Day 2 examples:
-   Part 1: "2x3x4" -> 58, "1x1x10" -> 43
-   Part 2: "2x3x4" -> 34, "1x1x10" -> 14
-*/
-static bool run_day2_tests(void)
-{
-    const struct test_case part1_tests[] = {
-        {"2x3x4\n", 58},
-        {"1x1x10\n", 43},
-    };
-
-    for (size_t i = 0; i < sizeof(part1_tests) / sizeof(part1_tests[0]); ++i)
-    {
-        int result = solve_aoc_2015_day_02_part_1(part1_tests[i].input);
-        if (result != part1_tests[i].expected)
-        {
-            printf("Day 2 Part 1 — Test %zu failed: \"%s\" -> expected %d, "
-                   "got %d\n",
-                   i + 1, part1_tests[i].input, part1_tests[i].expected,
-                   result);
-            return false;
-        }
-    }
-    printf("Day 2 Part 1: all tests passed!\n");
-
-    const struct test_case part2_tests[] = {
-        {"2x3x4\n", 34},
-        {"1x1x10\n", 14},
-    };
-
-    for (size_t i = 0; i < sizeof(part2_tests) / sizeof(part2_tests[0]); ++i)
-    {
-        int result = solve_aoc_2015_day_02_part_2(part2_tests[i].input);
-        if (result != part2_tests[i].expected)
-        {
-            printf("Day 2 Part 2 — Test %zu failed: \"%s\" -> expected %d, "
-                   "got %d\n",
-                   i + 1, part2_tests[i].input, part2_tests[i].expected,
-                   result);
-            return false;
-        }
-    }
-    printf("Day 2 Part 2: all tests passed!\n");
-    return true;
-}
-
 static bool run_tests(void)
 {
     bool ok1 = run_day1_tests();

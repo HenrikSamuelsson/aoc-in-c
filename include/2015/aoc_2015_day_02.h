@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+
 typedef struct Present {
     int length;
     int width;
@@ -14,6 +16,7 @@ typedef struct Present {
 
 int solve_aoc_2015_day_02_part_1(const char *instructions);
 int solve_aoc_2015_day_02_part_2(const char *instructions);
+bool run_day2_tests(void);
 
 #ifdef __cplusplus
 } /* extern "C" */
