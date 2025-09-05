@@ -11,7 +11,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/2015
 )
 
-
 # Options
 option(AOC_ENABLE_WARNINGS "Enable strict warnings" ON)
 option(AOC_ENABLE_SANITIZERS "Enable Address/UB sanitizers (non-MSVC)" OFF)
@@ -28,6 +27,7 @@ set(AOC_SOURCES
     src/input.c
     src/2015/aoc_2015_day_01.c
     src/2015/aoc_2015_day_02.c
+    src/2015/aoc_2015_day_03.c
 )
 
 add_executable(aoc ${AOC_SOURCES})
@@ -59,23 +59,30 @@ if (WIN32)
     target_compile_definitions(aoc PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
-# Testing: run built binary with 'test' subcommand
-include(CTest)
+# --- Tests ---------------------------------------------------------------
 if (AOC_BUILD_TESTING)
-    # Use the built target path explicitly
-    add_test(NAME aoc_test_all
-             COMMAND $<TARGET_FILE:aoc> test
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  include(CTest)
+  enable_testing()
 
-    # Mirror Makefile convenience targets 'run1' and 'run2'
-    add_test(NAME aoc_run_day01
-             COMMAND $<TARGET_FILE:aoc> 1
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  # Run all unit tests via your CLI "test" subcommand
+  add_test(NAME aoc_test_all
+           COMMAND $<TARGET_FILE:aoc> test
+           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-    add_test(NAME aoc_run_day02
-             COMMAND $<TARGET_FILE:aoc> 2
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  # Day-specific tests
+  add_test(NAME aoc_run_day01
+           COMMAND $<TARGET_FILE:aoc> test 1
+           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+  add_test(NAME aoc_run_day02
+           COMMAND $<TARGET_FILE:aoc> test 2
+           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+  add_test(NAME aoc_run_day03
+           COMMAND $<TARGET_FILE:aoc> test 3
+           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
+
 
 # Install (optional)
 install(TARGETS aoc RUNTIME DESTINATION bin)
