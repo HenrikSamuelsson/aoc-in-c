@@ -33,7 +33,7 @@ bool run_day3_tests(void)
         int result = solve_aoc_2015_day_03_part_1(part1_tests[i].input);
         if (result != part1_tests[i].expected)
         {
-            printf("Day 3 Part 1 — Test %zu failed: \"%s\" -> expected %d, "
+            printf("Day 3 Part 1 - Test %zu failed: \"%s\" -> expected %d, "
                    "got %d\n",
                    i + 1, part1_tests[i].input, part1_tests[i].expected,
                    result);
@@ -53,7 +53,7 @@ bool run_day3_tests(void)
         int result = solve_aoc_2015_day_03_part_2(part2_tests[i].input);
         if (result != part2_tests[i].expected)
         {
-            printf("Day 3 Part 2 — Test %zu failed: \"%s\" -> expected %d, "
+            printf("Day 3 Part 2 - Test %zu failed: \"%s\" -> expected %d, "
                    "got %d\n",
                    i + 1, part2_tests[i].input, part2_tests[i].expected,
                    result);
