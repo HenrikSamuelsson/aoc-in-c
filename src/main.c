@@ -6,6 +6,7 @@
 
 #include "2015/aoc_2015_day_01.h"
 #include "2015/aoc_2015_day_02.h"
+#include "2015/aoc_2015_day_03.h"
 #include "input.h"
 
 /* ---- CLI context to avoid easily-swappable parameters ---- */
@@ -33,7 +34,8 @@ static bool run_tests(void)
 {
     bool ok1 = run_day1_tests();
     bool ok2 = run_day2_tests();
-    return ok1 && ok2;
+    bool ok3 = run_day3_tests();
+    return ok1 && ok2 && ok3;
 }
 
 /* -------------------- Generic runner & registry -------------------- */
@@ -55,7 +57,8 @@ static const day_spec days[] = {
      solve_aoc_2015_day_01_part_2},
     {2015, 2, "data/aoc_2015_day_02_input.txt", solve_aoc_2015_day_02_part_1,
      solve_aoc_2015_day_02_part_2},
-};
+    {2015, 3, "data/aoc_2015_day_03_input.txt", solve_aoc_2015_day_03_part_1,
+     solve_aoc_2015_day_03_part_2}};
 static const size_t days_count = sizeof(days) / sizeof(days[0]);
 
 static inline const day_spec *find_day(int day_number)
